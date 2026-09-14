@@ -45,7 +45,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
         <a href={`mailto:${site.email}`} class="hover:text-ink">Email</a>
         <a href={links.github} class="hover:text-ink">GitHub</a>
         <a href={links.linkedin} class="hover:text-ink">LinkedIn</a>
-        <a href={site.resume} class="hover:text-ink">Résumé</a>
+        {site.resume && <a href={site.resume} class="hover:text-ink">Résumé</a>}
       </div>
       <p class="mt-4">© {new Date().getFullYear()} {site.name}</p>
     </footer>

@@ -109,8 +109,11 @@ when there is a first post; an empty blog is worse than no blog.
 
 ## 5. Open items
 
-1. **Résumé PDF** — drop `Aadit_Golwala_Resume_SWE.pdf` into `public/` as
-   `Aadit_Golwala_Resume.pdf`. The footer and hero already link to it.
+1. **Résumé PDF** — drop `Aadit_Golwala_Resume_SWE.pdf` into `public/`, then
+   set `resume` in `src/site.ts` to its path. The hero and footer links stay
+   hidden until it is set.
+   Note: the PDF carries your phone number, and this repo is public. Consider
+   a web version with the number removed.
 2. **Proprietary check on Lightform 1** before that page goes live.
 3. **Repo visibility** — `mentra`, `PetPal`, `personal-agent-platform` are
    private. Featured projects want either a public repo or a strong writeup.

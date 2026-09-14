@@ -9,7 +9,9 @@ export const site = {
   intro: "TODO: see PLAN.md §2 for what belongs here.",
   location: "West Lafayette, IN",
   email: "24agolwala@gmail.com",
-  resume: "/Aadit_Golwala_Resume.pdf",
+  // Empty until the PDF is in public/. Links to it are hidden while unset,
+  // so CI does not fail on a link to a file that is not there yet.
+  resume: "" as string,
   url: "https://aaditgolwala.com",
 } as const;
 

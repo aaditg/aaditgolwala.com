@@ -40,7 +40,16 @@ jobs:
       - name: Check links
         uses: lycheeverse/lychee-action@v2
         with:
-          args: --no-progress --max-retries 2 --accept 200,206,999 'dist/**/*.html'
+          # --root-dir resolves "/..." hrefs against the build output.
+          # The canonical host is excluded: checking your own site here would
+          # be circular, and uptime.yml already watches whether it is live.
+          args: >-
+            --no-progress
+            --max-retries 2
+            --accept 200,206,999
+            --root-dir "${{ github.workspace }}/dist"
+            --exclude '^https://aaditgolwala\.com'
+            'dist/**/*.html'
           fail: true
 
   secrets-scan:

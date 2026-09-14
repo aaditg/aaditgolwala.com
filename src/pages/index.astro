@@ -21,7 +21,7 @@ const rest = sorted.filter((p) => !p.data.featured);
       <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
       <a href={links.github} class="text-accent hover:underline">GitHub</a>
       <a href={links.linkedin} class="text-accent hover:underline">LinkedIn</a>
-      <a href={site.resume} class="text-accent hover:underline">Résumé (PDF)</a>
+      {site.resume && <a href={site.resume} class="text-accent hover:underline">Résumé (PDF)</a>}
     </div>
   </section>
 

@@ -17,8 +17,8 @@ const projects = defineCollection({
     // Featured projects get a full case study page; the rest are list rows.
     featured: z.boolean().default(false),
     order: z.number().default(99),
-    repo: z.string().url().optional(),
-    demo: z.string().url().optional(),
+    repo: z.url().optional(),
+    demo: z.url().optional(),
     // What broke and what you did about it. One or two sentences on the card,
     // expanded in the body. This is the differentiator — do not skip it.
     hardPart: z.string().optional(),
