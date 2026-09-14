@@ -6,7 +6,7 @@ period: "2026 — present"
 stack: ["Python", "SQLite", "MCP"]
 status: "active"
 featured: true
-order: 3
+order: 4
 hardPart: "TODO — e.g. making approvals and project isolation deterministic when the thing being governed is a non-deterministic model."
 metrics: []
 draft: true

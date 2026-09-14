@@ -1,0 +1,67 @@
+---
+// Three states, cycled in this order: system → light → dark → system.
+// `data-theme` on <html> is what the CSS tokens read; absence means system.
+// The button carries `data-mode` and CSS picks the matching icon — `hidden`
+// is an HTML attribute and does not apply to SVG children.
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  data-mode="system"
+  class="grid size-8 place-items-center rounded-md border border-line text-muted transition-colors hover:border-faint hover:text-ink"
+  aria-label="Change colour theme"
+  title="Theme: system"
+>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" class="size-4" aria-hidden="true">
+    <g data-icon="system"><rect x="3" y="4" width="18" height="13" rx="2" /><path d="M8 20h8" /></g>
+    <g data-icon="light"><circle cx="12" cy="12" r="4" /><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M19.1 4.9l-1.4 1.4M6.3 17.7l-1.4 1.4" /></g>
+    <g data-icon="dark"><path d="M20 14.5A8.5 8.5 0 1 1 9.5 4a7 7 0 0 0 10.5 10.5Z" /></g>
+  </svg>
+</button>
+
+<style>
+  [data-icon] { display: none; }
+  #theme-toggle[data-mode="system"] [data-icon="system"],
+  #theme-toggle[data-mode="light"] [data-icon="light"],
+  #theme-toggle[data-mode="dark"] [data-icon="dark"] { display: inline; }
+</style>
+
+<script>
+  const MODES = ["system", "light", "dark"] as const;
+  type Mode = (typeof MODES)[number];
+
+  const button = document.getElementById("theme-toggle");
+  if (button) {
+    const read = (): Mode => {
+      try {
+        const stored = localStorage.getItem("theme");
+        if (stored === "light" || stored === "dark") return stored;
+      } catch {
+        // Private windows and blocked site data both throw here.
+      }
+      return "system";
+    };
+
+    const apply = (mode: Mode) => {
+      if (mode === "system") delete document.documentElement.dataset.theme;
+      else document.documentElement.dataset.theme = mode;
+
+      button.dataset.mode = mode;
+      button.title = `Theme: ${mode}`;
+    };
+
+    apply(read());
+
+    button.addEventListener("click", () => {
+      const next = MODES[(MODES.indexOf(read()) + 1) % MODES.length]!;
+      try {
+        if (next === "system") localStorage.removeItem("theme");
+        else localStorage.setItem("theme", next);
+      } catch {
+        // Preference just will not persist; the page still switches.
+      }
+      apply(next);
+    });
+  }
+</script>

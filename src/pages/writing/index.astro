@@ -1,0 +1,39 @@
+---
+import { getCollection } from "astro:content";
+import Base from "../../layouts/Base.astro";
+
+const posts = (
+  await getCollection("writing", ({ data }) => import.meta.env.DEV || !data.draft)
+).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const dateFormat = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  year: "numeric",
+  timeZone: "UTC",
+});
+---
+
+<Base title="Writing" description={`Notes and writeups by ${"Aadit Golwala"}.`}>
+  <section class="pt-12 pb-4">
+    <a href="/" class="label transition-colors hover:text-ink">← Home</a>
+    <h1 class="mt-7 text-3xl font-semibold tracking-tight">Writing</h1>
+
+    <ul class="mt-9">
+      {posts.map((post) => (
+        <li class="border-t border-line py-6">
+          <a href={`/writing/${post.id}`} class="group block">
+            <div class="flex flex-wrap items-baseline gap-x-3">
+              <h2 class="font-medium tracking-tight transition-colors group-hover:text-accent">
+                {post.data.title}
+              </h2>
+              <span class="label ml-auto">{dateFormat.format(post.data.date)}</span>
+            </div>
+            <p class="mt-1.5 text-sm text-muted">{post.data.description}</p>
+          </a>
+        </li>
+      ))}
+    </ul>
+
+    {posts.length === 0 && <p class="mt-8 text-muted">Nothing published yet.</p>}
+  </section>
+</Base>

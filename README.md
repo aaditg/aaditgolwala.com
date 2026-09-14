@@ -15,6 +15,23 @@ npm run check    # astro check (typecheck)
 npm run build    # production build into dist/ — drafts excluded
 ```
 
+## Design
+
+Tokens (colour, type, the one display size) are declared once at the top of
+`src/styles/global.css` and nothing else hardcodes a colour. Light is the base;
+the two blocks under it re-declare the same variables for dark, once for system
+preference and once for an explicit choice, so the toggle wins in both
+directions. Utilities emit `var(--color-*)`, so there is no `dark:` prefix
+anywhere in the markup.
+
+Fonts are self-hosted through Fontsource — Inter for text, JetBrains Mono for
+every piece of metadata (dates, stacks, section labels, result figures). No
+font-CDN request, no flash of fallback text.
+
+The theme toggle cycles system → light → dark. An inline script in `<head>`
+applies the stored choice before first paint; without it a visitor who chose
+dark sees a white flash on every navigation.
+
 ## Content
 
 Projects are markdown in `src/content/projects/`. The frontmatter schema lives
@@ -27,7 +44,11 @@ in `src/content.config.ts` and asks for two fields most portfolios omit:
 dev`. Every project currently ships as a draft; flip to `false` as you finish
 each one.
 
-Identity, nav, and the work history are in `src/site.ts`.
+Posts are markdown in `src/content/writing/`, listed at `/writing` and on the
+homepage. Same `draft` behaviour.
+
+Identity, nav, and the work history are in `src/site.ts`. The copy there is a
+draft written from the résumé — see [PLAN.md](PLAN.md) §2.
 
 ## Deploy
 
@@ -81,7 +102,9 @@ change — far more often than an outage.
 - production build
 - `npm audit --omit=dev --audit-level=high`
 - **link check** on the built HTML (lychee) — dead links are the most common way
-  a portfolio site embarrasses you
+  a portfolio site embarrasses you. `--fallback-extensions html` is required:
+  `build.format: "file"` emits extensionless hrefs against `.html` files, which
+  Cloudflare resolves at request time but a filesystem check will not.
 - gitleaks secret scan
 
 Dependabot opens grouped npm PRs weekly and Actions PRs monthly.

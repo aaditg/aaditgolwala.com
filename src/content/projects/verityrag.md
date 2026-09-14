@@ -6,7 +6,7 @@ period: "2026"
 stack: ["FastAPI", "Python", "AWS", "SQS", "Terraform", "Postgres"]
 status: "active"
 featured: true
-order: 4
+order: 5
 repo: "https://github.com/aaditg/VerityRAG"
 hardPart: "TODO — e.g. keeping retrieval ACL-safe so a query never surfaces a chunk the asker cannot see in the source system."
 metrics: []

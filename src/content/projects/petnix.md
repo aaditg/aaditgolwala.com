@@ -6,7 +6,7 @@ period: "2025 — present"
 stack: ["React Native", "Expo", "TypeScript", "Supabase", "Postgres", "Astro", "Cloudflare"]
 status: "shipped"
 featured: true
-order: 2
+order: 3
 demo: "https://petnix.app"
 hardPart: "TODO — e.g. the migration discipline: schema changes as migrations only, mirrored to schema.sql, with an E2E suite gating TestFlight builds."
 metrics: []

@@ -1,28 +1,173 @@
 @import "tailwindcss";
 
-/* Design tokens live here, not scattered through components. The palette is
-   deliberately neutral for now — the design pass replaces these values, not
-   the markup. */
+/* Self-hosted so there is no render-blocking request to a font CDN and no
+   flash of fallback text. Variable fonts: one file covers every weight. */
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+/* ---------------------------------------------------------------------------
+   Tokens. Light is the base; the two blocks below re-declare the same custom
+   properties for dark. Utilities emit var(--color-*), so overriding the
+   variable is enough — no `dark:` prefix anywhere in the markup.
+   --------------------------------------------------------------------------- */
 @theme {
-  --color-ink: oklch(0.22 0.01 260);
-  --color-muted: oklch(0.52 0.01 260);
-  --color-paper: oklch(0.99 0.002 260);
-  --color-line: oklch(0.90 0.004 260);
-  --color-accent: oklch(0.55 0.15 255);
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  /* Warm off-white rather than #fff: easier on the eye, and it makes the
+     hairline rules read as structure instead of dirt. */
+  --color-paper: oklch(0.987 0.003 90);
+  --color-surface: oklch(0.963 0.004 90);
+  --color-ink: oklch(0.24 0.012 265);
+  --color-muted: oklch(0.525 0.014 265);
+  --color-faint: oklch(0.68 0.012 265);
+  --color-line: oklch(0.905 0.005 90);
+  --color-accent: oklch(0.52 0.155 258);
+  --color-accent-soft: oklch(0.93 0.035 258);
+
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+
+  /* One step past Tailwind's default scale at the top, for the hero only. */
+  --text-display: 2.75rem;
+  --text-display--line-height: 1.05;
+  --text-display--letter-spacing: -0.028em;
 }
 
+/* Dark by system preference — unless the visitor explicitly chose light. */
 @media (prefers-color-scheme: dark) {
-  @theme {
-    --color-ink: oklch(0.93 0.005 260);
-    --color-muted: oklch(0.65 0.01 260);
-    --color-paper: oklch(0.17 0.008 260);
-    --color-line: oklch(0.28 0.01 260);
-    --color-accent: oklch(0.72 0.13 255);
+  :root:not([data-theme="light"]) {
+    --color-paper: oklch(0.176 0.011 265);
+    --color-surface: oklch(0.216 0.013 265);
+    --color-ink: oklch(0.945 0.005 265);
+    --color-muted: oklch(0.675 0.015 265);
+    --color-faint: oklch(0.52 0.014 265);
+    --color-line: oklch(0.285 0.013 265);
+    --color-accent: oklch(0.76 0.135 256);
+    --color-accent-soft: oklch(0.3 0.06 258);
   }
 }
 
-html { scroll-behavior: smooth; }
+/* Dark by explicit choice. Duplicated on purpose: the toggle has to win in
+   both directions, including dark-on-a-light-system. */
+:root[data-theme="dark"] {
+  --color-paper: oklch(0.176 0.011 265);
+  --color-surface: oklch(0.216 0.013 265);
+  --color-ink: oklch(0.945 0.005 265);
+  --color-muted: oklch(0.675 0.015 265);
+  --color-faint: oklch(0.52 0.014 265);
+  --color-line: oklch(0.285 0.013 265);
+  --color-accent: oklch(0.76 0.135 256);
+  --color-accent-soft: oklch(0.3 0.06 258);
+}
+
+/* ---------------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+  /* Anchor targets clear the sticky header. */
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Utilities used often enough to earn a name
+   --------------------------------------------------------------------------- */
+@utility label {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
+/* Markdown bodies. Scoped so it cannot leak into the chrome. */
+@utility prose-body {
+  & > * + * { margin-top: 1.1em; }
+
+  & h2 {
+    margin-top: 2.5em;
+    margin-bottom: 0.6em;
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.011em;
+    color: var(--color-ink);
+  }
+  & h3 {
+    margin-top: 2em;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+  & p, & li { color: var(--color-muted); line-height: 1.75; }
+  & strong { color: var(--color-ink); font-weight: 600; }
+  & a { color: var(--color-accent); text-underline-offset: 3px; text-decoration-line: underline; }
+  & ul, & ol { padding-left: 1.15rem; }
+  & ul { list-style: disc; }
+  & ol { list-style: decimal; }
+  & li + li { margin-top: 0.4em; }
+  & li::marker { color: var(--color-faint); }
+  & code {
+    font-family: var(--font-mono);
+    font-size: 0.855em;
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 4px;
+    padding: 0.1em 0.34em;
+  }
+  & pre {
+    background: var(--color-surface);
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    padding: 1rem;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+  }
+  & pre code { background: none; border: 0; padding: 0; }
+  & blockquote {
+    border-left: 2px solid var(--color-line);
+    padding-left: 1rem;
+    color: var(--color-muted);
+    font-style: italic;
+  }
+  & hr { border: 0; border-top: 1px solid var(--color-line); margin: 2.5em 0; }
+
+  /* Tables carry the experiment numbers; they must scroll, not squash. */
+  & table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-mono);
+    font-size: 0.8125rem;
+  }
+  & th, & td {
+    border-bottom: 1px solid var(--color-line);
+    padding: 0.5rem 0.75rem 0.5rem 0;
+    text-align: left;
+  }
+  & th { color: var(--color-ink); font-weight: 600; }
+  & td { color: var(--color-muted); }
 }

@@ -48,6 +48,7 @@ jobs:
             --max-retries 2
             --accept 200,206,999
             --root-dir "${{ github.workspace }}/dist"
+            --fallback-extensions html
             --exclude '^https://aaditgolwala\.com'
             'dist/**/*.html'
           fail: true

@@ -52,19 +52,20 @@ It makes you memorable without confusing the pitch.
 
 ## 3. The project lineup
 
-### Featured — full case studies (5)
+### Featured — full case studies (6)
 
 | # | Project | Why it leads | What it needs from you |
 | --- | --- | --- | --- |
-| 1 | **Lightform 1** — gaze + gesture tracking | Real research, ongoing, with a named professor and a physical system behind it. Almost no undergrad has this. | ⚠️ Repo is marked proprietary. Get Prof. Alan's OK on what you can describe. Writeup only, no code. A demo clip (even face-mesh overlay on your own webcam) would carry it. |
-| 2 | **Petnix** | The only thing here that is genuinely *shipped* — App Store track, real schema, E2E suite gating builds. Product engineering, not a demo. | Screenshots or a 20s screen recording. Decide if `PetPal` goes public. Live link already exists: petnix.app. |
-| 3 | **PAOS** | Systems depth: isolation, permissions, approvals, audit. Reads as architecture, not glue code. | Private repo — writeup only, or extract a public core. An architecture diagram would do more than a paragraph. |
-| 4 | **VerityRAG** | Already public. FastAPI + SQS worker + Terraform on AWS, ACL-safe retrieval. Infra + retrieval in one. | Clean the README. The ACL-safety angle is the interesting part — lead with it, not with "RAG". |
-| 5 | **Mentra paper solver** | Short, delightful, instantly legible. Smart glasses, voice trigger, vision, spoken answer. The one people remember. | A 15-second GIF of it working is worth more than the rest of the page. Repo is private — publish it. |
+| 1 | **Multimodal music emotion recognition** | Your strongest *public* artifact, and it was nearly buried. Five approaches on one problem, nested CV, honest negative results, and a writeup that already does what this whole document argues for. An ML engineer reading it will believe you run real experiments. | ⚠️ The repo has no README and no description — a bare repo linked from a featured project is a weak click. Fix that and it is done. |
+| 2 | **Lightform 1** — gaze + gesture tracking | Real research, ongoing, with a named professor and a physical system behind it. Almost no undergrad has this. | ⚠️ Repo is marked proprietary. Get Prof. Alan's OK on what you can describe. Writeup only, no code. A demo clip (even face-mesh overlay on your own webcam) would carry it. |
+| 3 | **Petnix** | The only thing here that is genuinely *shipped* — App Store track, real schema, E2E suite gating builds. Product engineering, not a demo. | Screenshots or a 20s screen recording. Decide if `PetPal` goes public. Live link already exists: petnix.app. |
+| 4 | **PAOS** | Systems depth: isolation, permissions, approvals, audit. Reads as architecture, not glue code. | Private repo — writeup only, or extract a public core. An architecture diagram would do more than a paragraph. |
+| 5 | **VerityRAG** | Already public. FastAPI + SQS worker + Terraform on AWS, ACL-safe retrieval. Infra + retrieval in one. | Clean the README. The ACL-safety angle is the interesting part — lead with it, not with "RAG". |
+| 6 | **Mentra paper solver** | Short, delightful, instantly legible. Smart glasses, voice trigger, vision, spoken answer. The one people remember. | A 15-second GIF of it working is worth more than the rest of the page. Repo is private — publish it. |
 
 ### Second tier — one-line rows
 
-`foodeals` · `ALIGNA` · `MusicSentimentAnalysis` · `TensorFlow CNN generator`
+`foodeals` · `ALIGNA` · `TensorFlow CNN generator`
 
 ALIGNA sits here rather than in the featured set only because of the ML/SWE
 positioning. If a conversation ever goes toward hardware or product, it moves up.
@@ -94,16 +95,18 @@ sometime if you ever want CE-specific roles open to you.
 One page, four anchors, plus a case-study page per featured project.
 
 ```
-/                    Hero → Work → Selected projects → Also → About
+/                    Hero → Work → Selected projects → Also → Writing → About
 /projects/<slug>     Problem · What I built · The hard part · Results · What I'd change
+/writing             Post index
+/writing/<slug>      The post
 /404
 ```
 
 `Work` lists Unlearn, Perception Innovations, Oro Labs, DataMermaid — already
 filled in from the résumé in `src/site.ts`. Keep it in sync with the PDF.
 
-A `/writing` section exists in the content schema but is not routed yet. Add it
-when there is a first post; an empty blog is worse than no blog.
+`/writing` is live, with the music-emotion post as the first entry. The
+homepage shows the four most recent and the section heading links through.
 
 ---
 
@@ -119,10 +122,16 @@ when there is a first post; an empty blog is worse than no blog.
    private. Featured projects want either a public repo or a strong writeup.
 4. **Media.** Every featured project needs one real image, clip, or live link.
    This is the difference between the site working and not.
-5. **Design pass.** The scaffold is intentionally plain — tokens in
-   `src/styles/global.css`, no committed visual direction yet.
-6. **Every project is `draft: true`.** They are excluded from production builds
-   until flipped, so nothing half-written can leak to the live site.
+5. **A README for `MusicSentimentAnalysis`.** It is now the lead project and
+   the repo it links to has no README and no description. Highest-value
+   fifteen minutes on this list.
+6. **Read the drafted copy.** `src/site.ts` (tagline, intro, about) and the
+   case-study prose on the music project were written from your résumé and
+   your own `blog.md` so the design had real text to sit on. It is a draft,
+   not your voice — read it before the first deploy.
+7. **The other seven projects are still `draft: true`.** They are excluded from
+   production builds until flipped, so nothing half-written can leak out. The
+   music project and the blog post are `draft: false`.
 
 ---
 

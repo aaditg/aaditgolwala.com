@@ -1,0 +1,21 @@
+---
+interface Props {
+  status: "shipped" | "active" | "research" | "archived";
+}
+
+const { status } = Astro.props;
+
+const LABEL = {
+  shipped: "Shipped",
+  active: "In progress",
+  research: "Research",
+  archived: "Archived",
+} as const;
+---
+
+<span class="label inline-flex items-center gap-1.5 border border-line rounded-full px-2 py-0.5">
+  {(status === "shipped" || status === "active") && (
+    <span class="size-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+  )}
+  {LABEL[status]}
+</span>

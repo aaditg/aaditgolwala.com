@@ -6,7 +6,7 @@ period: "2026"
 stack: ["TypeScript", "MentraOS", "OpenAI vision"]
 status: "shipped"
 featured: true
-order: 5
+order: 6
 hardPart: "TODO — e.g. the round trip budget: transcription trigger to spoken answer without the wearer feeling the latency."
 metrics: []
 draft: true

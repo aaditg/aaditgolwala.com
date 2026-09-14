@@ -6,7 +6,7 @@ period: "2025 — present"
 stack: ["Python", "OpenCV", "MediaPipe", "PyTorch"]
 status: "research"
 featured: true
-order: 1
+order: 2
 hardPart: "TODO — e.g. holding tracking stable under the display's own changing illumination, or getting per-frame latency under the refresh budget."
 metrics: []
 draft: true
