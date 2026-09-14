@@ -1,0 +1,25 @@
+{
+  // Cloudflare Worker serving the static Astro build in `dist/`.
+  // The worker itself only canonicalizes the host (www -> apex) and adds
+  // security headers; everything else is a static asset lookup.
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aaditgolwala-com",
+  "main": "worker/index.js",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "not_found_handling": "404-page",
+    "html_handling": "auto-trailing-slash",
+    // Worker runs before asset lookup so the www redirect fires on real paths.
+    "run_worker_first": true
+  },
+  // aaditgolwala.com is registered in this Cloudflare account, so
+  // `custom_domain` routes create the DNS records and certificates on the
+  // first `wrangler deploy`. Nothing to set up by hand in the dashboard.
+  "routes": [
+    { "pattern": "aaditgolwala.com", "custom_domain": true },
+    { "pattern": "www.aaditgolwala.com", "custom_domain": true }
+  ],
+  "observability": { "enabled": true }
+}

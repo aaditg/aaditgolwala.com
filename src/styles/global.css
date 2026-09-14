@@ -1,0 +1,28 @@
+@import "tailwindcss";
+
+/* Design tokens live here, not scattered through components. The palette is
+   deliberately neutral for now — the design pass replaces these values, not
+   the markup. */
+@theme {
+  --color-ink: oklch(0.22 0.01 260);
+  --color-muted: oklch(0.52 0.01 260);
+  --color-paper: oklch(0.99 0.002 260);
+  --color-line: oklch(0.90 0.004 260);
+  --color-accent: oklch(0.55 0.15 255);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  @theme {
+    --color-ink: oklch(0.93 0.005 260);
+    --color-muted: oklch(0.65 0.01 260);
+    --color-paper: oklch(0.17 0.008 260);
+    --color-line: oklch(0.28 0.01 260);
+    --color-accent: oklch(0.72 0.13 255);
+  }
+}
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

@@ -1,0 +1,99 @@
+name: Uptime
+
+# Checks the live site every 15 minutes. On failure it opens a GitHub issue
+# (which emails you, because you watch your own repo); on recovery it comments
+# and closes that issue. No third-party account, no server.
+#
+# Two known limits, both covered by the external monitor in README §Monitoring:
+#   - GitHub delays or drops scheduled runs under load; treat this as a safety
+#     net, not a pager.
+#   - GitHub disables schedules after 60 days with no repo activity.
+
+on:
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  URL: https://aaditgolwala.com
+  # A string that must appear in the HTML. Catches a build that deployed but
+  # rendered empty — a 200 alone does not mean the site is actually up.
+  SENTINEL: "Aadit Golwala"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe the site
+        id: probe
+        run: |
+          set +e
+          body=$(curl --silent --show-error --location \
+                      --retry 3 --retry-delay 5 --retry-all-errors \
+                      --max-time 20 \
+                      --write-out '\nHTTP_STATUS:%{http_code}\nTOTAL_TIME:%{time_total}' \
+                      "$URL" 2>&1)
+          curl_exit=$?
+          set -e
+
+          status=$(printf '%s' "$body" | sed -n 's/^HTTP_STATUS://p' | tail -1)
+          elapsed=$(printf '%s' "$body" | sed -n 's/^TOTAL_TIME://p' | tail -1)
+
+          reason=""
+          if [ "$curl_exit" -ne 0 ]; then
+            reason="curl failed (exit $curl_exit)"
+          elif [ "$status" != "200" ]; then
+            reason="HTTP $status"
+          elif ! printf '%s' "$body" | grep -qF "$SENTINEL"; then
+            reason="200 OK but the page did not contain \"$SENTINEL\" — deployed but broken"
+          fi
+
+          if [ -n "$reason" ]; then
+            echo "down=true" >> "$GITHUB_OUTPUT"
+            echo "reason=$reason" >> "$GITHUB_OUTPUT"
+            echo "::error::$URL is DOWN — $reason"
+          else
+            echo "down=false" >> "$GITHUB_OUTPUT"
+            echo "$URL is up (${elapsed}s)"
+          fi
+          echo "elapsed=$elapsed" >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the incident issue
+        if: steps.probe.outputs.down == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REASON: ${{ steps.probe.outputs.reason }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          existing=$(gh issue list --label uptime --state open --limit 1 --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "Still down at $(date -u '+%Y-%m-%d %H:%M UTC') — $REASON. [Run]($RUN_URL)"
+          else
+            gh issue create \
+              --title "🔴 aaditgolwala.com is down" \
+              --label uptime \
+              --body "$(printf '%s\n' \
+                "**$URL** failed its check at $(date -u '+%Y-%m-%d %H:%M UTC')." \
+                "" \
+                "**Reason:** $REASON" \
+                "" \
+                "This issue closes automatically on the next successful check." \
+                "" \
+                "[Failing run]($RUN_URL)")"
+          fi
+
+      - name: Close the incident issue on recovery
+        if: steps.probe.outputs.down == 'false'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ELAPSED: ${{ steps.probe.outputs.elapsed }}
+        run: |
+          existing=$(gh issue list --label uptime --state open --limit 1 --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            gh issue close "$existing" \
+              --comment "✅ Recovered at $(date -u '+%Y-%m-%d %H:%M UTC') — 200 OK in ${ELAPSED}s."
+          fi

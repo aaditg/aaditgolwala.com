@@ -1,0 +1,53 @@
+---
+import "../styles/global.css";
+import { site, nav, links } from "../site";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const { title, description = site.tagline } = Astro.props;
+const pageTitle = title ? `${title} — ${site.name}` : `${site.name}`;
+const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body class="bg-paper text-ink font-sans antialiased">
+    <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:p-3">Skip to content</a>
+
+    <header class="mx-auto flex max-w-3xl items-baseline justify-between px-6 py-8">
+      <a href="/" class="font-medium">{site.name}</a>
+      <nav class="flex gap-5 text-sm text-muted">
+        {nav.map((item) => <a href={item.href} class="hover:text-ink">{item.label}</a>)}
+      </nav>
+    </header>
+
+    <main id="main" class="mx-auto max-w-3xl px-6">
+      <slot />
+    </main>
+
+    <footer class="mx-auto max-w-3xl border-t border-line px-6 py-10 mt-24 text-sm text-muted">
+      <div class="flex flex-wrap gap-5">
+        <a href={`mailto:${site.email}`} class="hover:text-ink">Email</a>
+        <a href={links.github} class="hover:text-ink">GitHub</a>
+        <a href={links.linkedin} class="hover:text-ink">LinkedIn</a>
+        <a href={site.resume} class="hover:text-ink">Résumé</a>
+      </div>
+      <p class="mt-4">© {new Date().getFullYear()} {site.name}</p>
+    </footer>
+  </body>
+</html>
