@@ -20,6 +20,9 @@ permissions:
 
 env:
   URL: https://aaditgolwala.com
+  # This job does not check out the repo, so `gh` cannot infer it from a git
+  # remote. Without this every `gh issue` call fails with "not a git repository".
+  GH_REPO: ${{ github.repository }}
   # A string that must appear in the HTML. Catches a build that deployed but
   # rendered empty — a 200 alone does not mean the site is actually up.
   SENTINEL: "Aadit Golwala"
@@ -45,7 +48,14 @@ jobs:
 
           reason=""
           if [ "$curl_exit" -ne 0 ]; then
-            reason="curl failed (exit $curl_exit)"
+            case "$curl_exit" in
+              6)  detail="could not resolve the host — DNS" ;;
+              7)  detail="connection refused" ;;
+              28) detail="timed out" ;;
+              35|60) detail="TLS handshake or certificate problem" ;;
+              *)  detail="request failed" ;;
+            esac
+            reason="$detail (curl exit $curl_exit)"
           elif [ "$status" != "200" ]; then
             reason="HTTP $status"
           elif ! printf '%s' "$body" | grep -qF "$SENTINEL"; then
