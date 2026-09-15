@@ -40,6 +40,13 @@ in `src/content.config.ts` and asks for two fields most portfolios omit:
 - `hardPart` — what broke and what you measured. The section people read.
 - `metrics` — numbers only.
 
+Beyond those: `group` picks the homepage section (product / research /
+project), `description` is two or three paragraphs of substance, `highlights`
+are the specific things built, and `links` is where to see it — live site,
+beta, campaign, code — shown as pills. `caseStudy: true` is what makes a
+`/projects/<slug>` page exist; a project without one is homepage-only, so a
+TODO body can never sit behind a real link.
+
 `draft: true` keeps a project out of production builds but visible in `npm run
 dev`. Every project currently ships as a draft; flip to `false` as you finish
 each one.

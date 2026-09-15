@@ -5,6 +5,7 @@ role: "Solo"
 period: "2026"
 stack: ["Python", "Supabase", "Postgres"]
 status: "active"
+group: "project"
 featured: false
 order: 10
 draft: true

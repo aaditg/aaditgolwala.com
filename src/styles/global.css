@@ -4,6 +4,8 @@
    flash of fallback text. Variable fonts: one file covers every weight. */
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/jetbrains-mono";
+/* Display serif for the name, section heads, and entry titles only. */
+@import "@fontsource/instrument-serif";
 
 /* ---------------------------------------------------------------------------
    Tokens. Light is the base; the two blocks below re-declare the same custom
@@ -24,11 +26,16 @@
 
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono Variable", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-display: "Instrument Serif", "Iowan Old Style", Georgia, serif;
 
   /* One step past Tailwind's default scale at the top, for the hero only. */
-  --text-display: 2.75rem;
-  --text-display--line-height: 1.05;
-  --text-display--letter-spacing: -0.028em;
+  --text-display: 3.5rem;
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.01em;
+  --text-heading: 2rem;
+  --text-heading--line-height: 1.1;
+  --text-entry: 1.5rem;
+  --text-entry--line-height: 1.15;
 }
 
 /* Dark by system preference — unless the visitor explicitly chose light. */
@@ -96,6 +103,26 @@ body {
 /* ---------------------------------------------------------------------------
    Utilities used often enough to earn a name
    --------------------------------------------------------------------------- */
+@utility display {
+  font-family: var(--font-display);
+  font-weight: 400;
+}
+
+/* Pill links for "where to see it": site, beta, campaign, code. */
+@utility pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 0.3rem 0.65rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  color: var(--color-ink);
+  transition: border-color 140ms ease, color 140ms ease;
+  &:hover { border-color: var(--color-accent); color: var(--color-accent); }
+}
+
 @utility label {
   font-family: var(--font-mono);
   font-size: 0.6875rem;

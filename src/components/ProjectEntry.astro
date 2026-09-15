@@ -1,0 +1,70 @@
+---
+import type { CollectionEntry } from "astro:content";
+import StatusPill from "./StatusPill.astro";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { title, blurb, period, stack, status, description, highlights, hardPart, metrics, links, repo, demo, caseStudy } =
+  project.data;
+
+// Where to see it, in a fixed order: named links first, then the generic ones.
+const seeIt = [
+  ...links,
+  ...(demo ? [{ label: "Live", href: demo }] : []),
+  ...(repo ? [{ label: "Code", href: repo }] : []),
+];
+---
+
+<article class="border-t border-line py-10">
+  <div class="flex flex-wrap items-baseline gap-x-4 gap-y-2">
+    <h3 class="display text-entry">{title}</h3>
+    <StatusPill status={status} />
+    <span class="label ml-auto">{period}</span>
+  </div>
+
+  <p class="mt-3 text-lg text-muted">{blurb}</p>
+
+  {(seeIt.length > 0 || caseStudy) && (
+    <div class="mt-5 flex flex-wrap gap-2">
+      {seeIt.map((l) => (
+        <a href={l.href} class="pill" rel="noopener">{l.label} <span aria-hidden="true">↗</span></a>
+      ))}
+      {caseStudy && (
+        <a href={`/projects/${project.id}`} class="pill">Case study <span aria-hidden="true">→</span></a>
+      )}
+    </div>
+  )}
+
+  {description.length > 0 && (
+    <div class="mt-6 max-w-prose space-y-4 text-muted">
+      {description.map((p) => <p>{p}</p>)}
+    </div>
+  )}
+
+  {highlights.length > 0 && (
+    <ul class="mt-6 max-w-prose space-y-2.5">
+      {highlights.map((h) => (
+        <li class="flex gap-3 text-sm text-muted">
+          <span class="mt-[0.6em] size-1 shrink-0 rounded-full bg-faint" aria-hidden="true"></span>
+          <span>{h}</span>
+        </li>
+      ))}
+    </ul>
+  )}
+
+  {hardPart && (
+    <p class="mt-6 max-w-prose border-l-2 border-line pl-4 text-sm text-muted">
+      <span class="label mr-1.5">The hard part</span>{hardPart}
+    </p>
+  )}
+
+  <div class="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2">
+    {metrics.map((m) => (
+      <span class="rounded-md bg-surface px-2 py-1 font-mono text-xs text-muted">{m}</span>
+    ))}
+    <span class="font-mono text-xs text-faint">{stack.join(" / ")}</span>
+  </div>
+</article>

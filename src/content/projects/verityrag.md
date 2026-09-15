@@ -5,33 +5,43 @@ role: "Solo"
 period: "2026"
 stack: ["FastAPI", "Python", "AWS", "SQS", "Terraform", "Postgres"]
 status: "active"
+group: "project"
 featured: true
 order: 5
 repo: "https://github.com/aaditg/VerityRAG"
-hardPart: "TODO — e.g. keeping retrieval ACL-safe so a query never surfaces a chunk the asker cannot see in the source system."
+description:
+  - >-
+    Retrieval that respects access control: a query never surfaces a chunk the
+    asker could not open in the source system. Multi-persona and faceted, so
+    the same corpus answers differently depending on who is asking and what
+    they are allowed to see. Slack is the interface.
+  - >-
+    A production-lean monorepo on AWS — a FastAPI service for auth, Slack, ask,
+    admin, and connectors; an SQS-driven ingestion and sync worker; Terraform
+    for the infrastructure; and a drop-in local learnset for indexing files
+    without a connector.
+highlights:
+  - "ACL-safe retrieval: permissions travel with the chunk"
+  - "Slack as the primary surface, with a FastAPI admin and connector API behind it"
+  - "Terraform-defined AWS deployment"
 metrics: []
-draft: true
+caseStudy: false
+draft: false
 ---
 
 ## The problem
 
-TODO — one paragraph. What was actually wrong / missing, in plain language.
+TODO
 
 ## What I built
 
-TODO — the shape of the system. Prefer a short list or a diagram over prose.
+TODO
 
 ## The hard part
 
-TODO — **this is the section people read.** What broke, how you found it, what
-you measured, what you changed. Be specific enough that another engineer
-believes you were there.
+TODO
 
 ## Results
 
-TODO — numbers. Latency, throughput, users, cost, accuracy, time saved.
-
-## What I would do differently
-
-TODO — two sentences. Honesty here reads as seniority.
+TODO
 

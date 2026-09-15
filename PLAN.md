@@ -122,14 +122,20 @@ homepage shows the four most recent and the section heading links through.
    private. Featured projects want either a public repo or a strong writeup.
 4. **Media.** Every featured project needs one real image, clip, or live link.
    This is the difference between the site working and not.
-5. **A README for `MusicSentimentAnalysis`.** It is now the lead project and
+5. **Kickstarter URL for ALIGNA.** There is a commented slot in
+   `src/content/projects/aligna.md` → `links`. The campaign copy is still a
+   draft with placeholders, so nothing to link yet; the day the page exists it
+   is one line.
+6. **A photo.** `site.photo` in `src/site.ts` renders a small image in the hero
+   when set. Candid beats headshot; square-ish, ≥ 600px, into `public/`.
+7. **A README for `MusicSentimentAnalysis`.** It is now the lead project and
    the repo it links to has no README and no description. Highest-value
    fifteen minutes on this list.
-6. **Read the drafted copy.** `src/site.ts` (tagline, intro, about) and the
+8. **Read the drafted copy.** `src/site.ts` (tagline, intro, about) and the
    case-study prose on the music project were written from your résumé and
    your own `blog.md` so the design had real text to sit on. It is a draft,
    not your voice — read it before the first deploy.
-7. **The other seven projects are still `draft: true`.** They are excluded from
+9. **Drafts.** They are excluded from
    production builds until flipped, so nothing half-written can leak out. The
    music project and the blog post are `draft: false`.
 

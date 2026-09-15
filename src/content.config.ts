@@ -13,7 +13,18 @@ const projects = defineCollection({
     role: z.string(),
     period: z.string(),
     stack: z.array(z.string()),
-    status: z.enum(["shipped", "active", "research", "archived"]),
+    status: z.enum(["shipped", "beta", "active", "research", "archived"]),
+    // Which homepage section this belongs to.
+    group: z.enum(["product", "research", "project"]).default("project"),
+    // Homepage prose: two or three short paragraphs of what it is and where
+    // it stands. This is the substance; `blurb` is only the one-liner.
+    description: z.array(z.string()).default([]),
+    // Specific things built or found. Concrete beats adjectives.
+    highlights: z.array(z.string()).default([]),
+    // Where to see it: live site, beta, campaign, code. Shown as pills.
+    links: z.array(z.object({ label: z.string(), href: z.url() })).default([]),
+    // Only projects with a written case study get a /projects/<slug> page.
+    caseStudy: z.boolean().default(false),
     // Featured projects get a full case study page; the rest are list rows.
     featured: z.boolean().default(false),
     order: z.number().default(99),

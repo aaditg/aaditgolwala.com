@@ -1,40 +1,44 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
-import ProjectCard from "../components/ProjectCard.astro";
+import SectionHeading from "../components/SectionHeading.astro";
+import ProjectEntry from "../components/ProjectEntry.astro";
 import { site, experience, links } from "../site";
 
 const visible = ({ data }: { data: { draft: boolean } }) => import.meta.env.DEV || !data.draft;
 
-const projects = (await getCollection("projects", visible)).sort(
-  (a, b) => a.data.order - b.data.order,
-);
-const featured = projects.filter((p) => p.data.featured);
-const rest = projects.filter((p) => !p.data.featured);
+const projects = (await getCollection("projects", visible)).sort((a, b) => a.data.order - b.data.order);
+const products = projects.filter((p) => p.data.group === "product");
+const research = projects.filter((p) => p.data.group === "research");
+const featuredProjects = projects.filter((p) => p.data.group === "project" && p.data.featured);
+const otherProjects = projects.filter((p) => p.data.group === "project" && !p.data.featured);
 
 const posts = (await getCollection("writing", visible)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
 
-// timeZone: frontmatter dates parse as UTC midnight; without this a reader
-// west of Greenwich sees the day before.
-const dateFormat = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  year: "numeric",
-  timeZone: "UTC",
-});
+const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric", timeZone: "UTC" });
 ---
 
 <Base>
-  {/* Above the fold: who, what, where to reach you. Visitors decide inside
-      thirty seconds, so nothing here is below a scroll. */}
-  <section class="pt-16 pb-14 sm:pt-24">
-    <h1 class="text-display font-semibold">{site.name}</h1>
-    <p class="mt-3 text-lg text-muted">{site.tagline}</p>
+  <section class="pt-16 pb-16 sm:pt-24">
+    <div class="flex flex-col-reverse gap-8 sm:flex-row sm:items-start sm:justify-between">
+      <div>
+        <h1 class="display text-display">{site.name}</h1>
+        <p class="mt-3 text-xl text-muted">{site.tagline}</p>
+      </div>
+      {site.photo && (
+        <img
+          src={site.photo}
+          alt={site.name}
+          width="112"
+          height="112"
+          class="size-24 shrink-0 rounded-2xl object-cover sm:size-28"
+        />
+      )}
+    </div>
 
     <p class="mt-5 flex items-start gap-2 font-mono text-xs text-faint">
-      {/* items-start + the nudge keeps the dot on the first line when this
-          wraps on a phone, instead of floating to the middle of the block. */}
       <span class="relative mt-[0.45em] flex size-1.5 shrink-0" aria-hidden="true">
         <span class="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60"></span>
         <span class="relative inline-flex size-1.5 rounded-full bg-accent"></span>
@@ -42,82 +46,107 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
       {site.currently}
     </p>
 
-    <p class="mt-7 max-w-prose text-muted">{site.intro}</p>
+    <p class="mt-8 max-w-prose text-[17px] leading-relaxed text-muted">{site.intro}</p>
 
-    <div class="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-      <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
-      <a href={links.github} class="text-accent hover:underline">GitHub ↗</a>
-      <a href={links.linkedin} class="text-accent hover:underline">LinkedIn ↗</a>
-      {site.resume && <a href={site.resume} class="text-accent hover:underline">Résumé (PDF)</a>}
+    <div class="mt-8 flex flex-wrap gap-2">
+      <a href={`mailto:${site.email}`} class="pill">{site.email}</a>
+      <a href={links.github} class="pill">GitHub <span aria-hidden="true">↗</span></a>
+      <a href={links.linkedin} class="pill">LinkedIn <span aria-hidden="true">↗</span></a>
+      {site.resume && <a href={site.resume} class="pill">Résumé (PDF)</a>}
     </div>
   </section>
 
-  <section id="work" class="scroll-mt-20 py-10">
-    <h2 class="label">Work</h2>
-    <ol class="mt-5">
+  {products.length > 0 && (
+    <section id="building" class="scroll-mt-20 py-14">
+      <SectionHeading
+        number="01 — Building"
+        title="Things people can use"
+        lede="Products with a live site, a beta, or a sample you can hold. Not demos."
+      />
+      {products.map((p) => <ProjectEntry project={p} />)}
+    </section>
+  )}
+
+  {research.length > 0 && (
+    <section id="research" class="scroll-mt-20 py-14">
+      <SectionHeading
+        number="02 — Research"
+        title="Machine learning, measured"
+        lede="Work where the result is a number, and the negative results are reported next to the wins."
+      />
+      {research.map((p) => <ProjectEntry project={p} />)}
+    </section>
+  )}
+
+  {(featuredProjects.length > 0 || otherProjects.length > 0) && (
+    <section id="projects" class="scroll-mt-20 py-14">
+      <SectionHeading number="03 — Projects" title="Systems and experiments" />
+      {featuredProjects.map((p) => <ProjectEntry project={p} />)}
+      {otherProjects.length > 0 && (
+        <ul class="mt-2 border-t border-line">
+          {otherProjects.map((p) => (
+            <li class="flex flex-wrap items-baseline gap-x-3 border-b border-line py-3.5 text-sm">
+              <span class="font-medium">{p.data.title}</span>
+              <span class="text-muted">{p.data.blurb}</span>
+              {p.data.repo && <a href={p.data.repo} class="ml-auto text-accent hover:underline">Code ↗</a>}
+            </li>
+          ))}
+        </ul>
+      )}
+    </section>
+  )}
+
+  <section id="work" class="scroll-mt-20 py-14">
+    <SectionHeading number="04 — Work" title="Where I've worked" />
+    <ol>
       {experience.map((job) => (
-        <li class="border-t border-line py-5">
-          <div class="flex flex-wrap items-baseline gap-x-3">
-            <p class="font-medium tracking-tight">{job.company}</p>
+        <li class="border-t border-line py-7">
+          <div class="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+            <h3 class="text-lg font-medium tracking-tight">
+              {"url" in job ? (
+                <a href={job.url} class="hover:text-accent">{job.company} <span class="text-faint" aria-hidden="true">↗</span></a>
+              ) : (
+                job.company
+              )}
+            </h3>
             <span class="label ml-auto">{job.period}</span>
           </div>
-          <p class="mt-0.5 text-sm text-faint">{job.role}</p>
-          <p class="mt-2 text-sm text-muted">{job.note}</p>
+          <p class="mt-0.5 text-sm text-faint">{job.role} · {job.what}</p>
+          <ul class="mt-3 max-w-prose space-y-2">
+            {job.bullets.map((b) => (
+              <li class="flex gap-3 text-sm text-muted">
+                <span class="mt-[0.6em] size-1 shrink-0 rounded-full bg-faint" aria-hidden="true"></span>
+                <span>{b}</span>
+              </li>
+            ))}
+          </ul>
         </li>
       ))}
     </ol>
   </section>
 
-  <section id="projects" class="scroll-mt-20 py-10">
-    <h2 class="label">Selected projects</h2>
-    <div class="mt-5">
-      {featured.map((project) => <ProjectCard project={project} />)}
-    </div>
-
-    {rest.length > 0 && (
-      <>
-        <h2 class="label mt-14">Also</h2>
-        <ul class="mt-4">
-          {rest.map((project) => (
-            <li class="border-t border-line py-3.5">
-              <a href={`/projects/${project.id}`} class="group flex flex-wrap items-baseline gap-x-2 text-sm">
-                <span class="font-medium transition-colors group-hover:text-accent">{project.data.title}</span>
-                <span class="text-muted">{project.data.blurb}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </>
-    )}
-  </section>
-
   {posts.length > 0 && (
-    <section id="writing" class="scroll-mt-20 py-10">
-      <h2>
-        <a href="/writing" class="label transition-colors hover:text-ink">Writing →</a>
-      </h2>
-      <ul class="mt-5">
-        {posts.slice(0, 4).map((post) => (
-          <li class="border-t border-line py-5">
+    <section id="writing" class="scroll-mt-20 py-14">
+      <SectionHeading number="05 — Writing" title="Notes and writeups" />
+      <ul>
+        {posts.map((post) => (
+          <li class="border-t border-line py-6">
             <a href={`/writing/${post.id}`} class="group block">
-              <div class="flex flex-wrap items-baseline gap-x-3">
-                <h3 class="font-medium tracking-tight transition-colors group-hover:text-accent">
-                  {post.data.title}
-                </h3>
+              <div class="flex flex-wrap items-baseline gap-x-4">
+                <h3 class="display text-entry transition-colors group-hover:text-accent">{post.data.title}</h3>
                 <span class="label ml-auto">{dateFormat.format(post.data.date)}</span>
               </div>
-              <p class="mt-1.5 text-sm text-muted">{post.data.description}</p>
+              <p class="mt-2 max-w-prose text-muted">{post.data.description}</p>
             </a>
           </li>
         ))}
       </ul>
-
     </section>
   )}
 
-  <section id="about" class="scroll-mt-20 py-10">
-    <h2 class="label">About</h2>
-    <div class="mt-5 max-w-prose space-y-4 text-muted">
+  <section id="about" class="scroll-mt-20 py-14">
+    <SectionHeading number="06 — About" title="The through-line" />
+    <div class="max-w-prose space-y-4 text-muted">
       {site.about.map((paragraph) => <p>{paragraph}</p>)}
     </div>
   </section>

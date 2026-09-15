@@ -5,8 +5,33 @@ role: "Solo"
 period: "2026"
 stack: ["Python", "scikit-learn", "PyTorch", "DistilBERT", "OpenAI API"]
 status: "active"
+group: "research"
 featured: true
 order: 1
+description:
+  - >-
+    Can you tell how a song feels from its notes, its lyrics, or its recording,
+    and which of the three actually knows? Every model predicts one of four
+    emotion quadrants — valence crossed with arousal — so results stay
+    comparable across inputs that share nothing else.
+  - >-
+    Five approaches on one problem: symbolic features from MIDI, TF-IDF lyrics
+    into an SVM, acoustic features from audio, weighted late fusion where both
+    exist, and DistilBERT fine-tuning against GPT-5.5 zero-shot. Nested
+    cross-validation throughout, and the negative results reported next to
+    the wins.
+highlights:
+  - >-
+    Audio hears energy but not mood. Fixed the collapse on the two
+    disagreement quadrants with separate valence and arousal regressors plus
+    SMOTE.
+  - >-
+    Fusion beats either modality alone: 0.68 lyrics, 0.63 audio, 0.743
+    together.
+  - >-
+    Found and fixed a hardcoded-tempo bug that silently miscomputed every
+    duration feature — and it moved accuracy by almost nothing.
+caseStudy: true
 repo: "https://github.com/aaditg/MusicSentimentAnalysis"
 hardPart: "Audio hears energy but not mood, so the two quadrants where valence and arousal disagree collapsed to near-zero F1. Predicting valence and arousal as separate regressions and reading the quadrant off them — plus SMOTE on the minority classes — took macro-F1 from 0.40 to 0.49 and stopped the model ignoring the hard classes entirely."
 metrics: ["0.764 macro-F1 · GPT-5.5 zero-shot", "0.743 · audio + lyrics fusion", "5 approaches compared"]

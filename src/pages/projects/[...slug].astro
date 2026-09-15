@@ -7,7 +7,9 @@ import StatusPill from "../../components/StatusPill.astro";
 export const getStaticPaths = (async () => {
   const projects = await getCollection(
     "projects",
-    ({ data }) => import.meta.env.DEV || !data.draft,
+    // A page exists only where a case study has been written — a TODO body
+    // can never go live behind a real link.
+    ({ data }) => data.caseStudy && (import.meta.env.DEV || !data.draft),
   );
   return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
 }) satisfies GetStaticPaths;

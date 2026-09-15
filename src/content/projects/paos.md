@@ -1,36 +1,48 @@
 ---
 title: "PAOS — personal agent platform"
-blurb: "A local-first control plane that an agent runtime must go through for memory, isolation, permissions, and audit."
+blurb: "A local-first control plane that an AI agent must go through for memory, isolation, permissions, and audit."
 role: "Solo"
 period: "2026 — present"
-stack: ["Python", "SQLite", "MCP"]
+stack: ["Python", "OpenClaw"]
 status: "active"
+group: "project"
 featured: true
 order: 4
-hardPart: "TODO — e.g. making approvals and project isolation deterministic when the thing being governed is a non-deterministic model."
+description:
+  - >-
+    A private, local-first control plane for a personal AI agent. The agent
+    runtime handles messaging and tool use; PAOS is the deterministic layer it
+    has to pass through for memory, project isolation, permissions, approvals,
+    and audit — so that a non-deterministic model operates inside rules that
+    are not.
+  - >-
+    Single user by design: not a service, not multi-tenant, not for resale.
+    The core is in — isolation, memory, approvals, coding tools, and browser
+    control.
+highlights:
+  - "Project isolation, so work in one context cannot read or write another"
+  - "Approval gates and an audit trail for every side-effecting action"
+hardPart: >-
+  Making approvals and isolation deterministic when the thing being governed
+  is a model that is not.
 metrics: []
-draft: true
+caseStudy: false
+draft: false
 ---
 
 ## The problem
 
-TODO — one paragraph. What was actually wrong / missing, in plain language.
+TODO
 
 ## What I built
 
-TODO — the shape of the system. Prefer a short list or a diagram over prose.
+TODO
 
 ## The hard part
 
-TODO — **this is the section people read.** What broke, how you found it, what
-you measured, what you changed. Be specific enough that another engineer
-believes you were there.
+TODO
 
 ## Results
 
-TODO — numbers. Latency, throughput, users, cost, accuracy, time saved.
-
-## What I would do differently
-
-TODO — two sentences. Honesty here reads as seniority.
+TODO
 

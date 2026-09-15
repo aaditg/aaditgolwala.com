@@ -5,6 +5,7 @@ role: "Solo"
 period: "2024"
 stack: ["Python", "TensorFlow"]
 status: "archived"
+group: "project"
 featured: false
 order: 12
 repo: "https://github.com/aaditg/Tensor-Flow-CNN-Gen"
