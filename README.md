@@ -17,19 +17,6 @@ npm run build    # production build into dist/ — drafts excluded
 
 ## Design
 
-The homepage is one continuous 6-column mosaic (`src/pages/index.astro`);
-`Tile.astro` is the cell. Spans are desktop values — tablets get two columns,
-phones one, in DOM order. Project tile size is decided by `order` in the
-frontmatter, not by hand: #1 is 4×2 with its chart, #2 is 2×2, the rest 2×1.
-`grid-auto-flow: dense` lets small tiles backfill the gap a draft project leaves
-in a production build. The reasoning is PLAN.md §7.
-
-The lead tile's chart (`MacroChart.astro`) is a single-series horizontal bar
-drawn from `chart:` in the project's frontmatter. Its field colour is a
-dedicated token, `--color-bar`, chosen per mode so the field stays both
-distinguishable from the accent and ≥ 3:1 against the tile — validated, not
-eyeballed. Regenerate nothing; edit the numbers in the markdown.
-
 Tokens (colour, type, the one display size) are declared once at the top of
 `src/styles/global.css` and nothing else hardcodes a colour. Light is the base;
 the two blocks under it re-declare the same variables for dark, once for system
