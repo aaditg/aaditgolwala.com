@@ -10,6 +10,16 @@ order: 1
 repo: "https://github.com/aaditg/MusicSentimentAnalysis"
 hardPart: "Audio hears energy but not mood, so the two quadrants where valence and arousal disagree collapsed to near-zero F1. Predicting valence and arousal as separate regressions and reading the quadrant off them — plus SMOTE on the minority classes — took macro-F1 from 0.40 to 0.49 and stopped the model ignoring the hard classes entirely."
 metrics: ["0.764 macro-F1 · GPT-5.5 zero-shot", "0.743 · audio + lyrics fusion", "5 approaches compared"]
+chart:
+  title: "Macro-F1 by approach"
+  max: 1
+  series:
+    - { label: "Audio", value: 0.494 }
+    - { label: "Symbolic", value: 0.639 }
+    - { label: "Lyrics", value: 0.690 }
+    - { label: "DistilBERT", value: 0.716 }
+    - { label: "Fusion", value: 0.743 }
+    - { label: "GPT-5.5 0-shot", value: 0.764, highlight: true }
 draft: false
 ---
 

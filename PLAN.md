@@ -146,7 +146,53 @@ homepage shows the four most recent and the section heading links through.
 
 ---
 
+## 7. Layout decision — the mosaic (15 September 2026)
+
+A second research pass, this one on *how the good sites look* rather than what
+they contain. It converged harder than the first:
+
+- The canonical engineer sites — Paco Coursey, Lee Robinson, Brittany Chiang,
+  Addy Osmani — are all single-column and typographic. None is a bento.
+- The HN "share your personal site" thread praises character and hand-made
+  feel; its criticism list includes "generic bento layouts feeling
+  derivative."
+- The bento critique is precise: tiles earn their sizes only when they hold
+  genuinely different *types* of information at different weights. The
+  diagnostic is the **deletion test** — remove a tile; if nothing has to
+  rebalance, the sizes were decoration.
+- Where bento is earned, the rules: one anchor ≥ 1.5–2× the largest supporting
+  tile, upper-left; gutter, tile padding and page margin as three distinct
+  values; tight headlines; one idea per tile; phones collapse to one column,
+  anchor first.
+- Recruiter attention: the first project is read ~3.5× more than the fourth.
+
+Decision: full tile mosaic, chosen against the research's default and with
+that flagged. Built to the rules so it is not the card wall the critique
+describes:
+
+| Rule | How it shows up |
+| --- | --- |
+| One anchor | Identity tile, 3×2. Nothing else spans two rows in the hero. |
+| Sizes follow weight | Project tile size is a function of `order`: #1 is 4×2 with the figure, #2 is 2×2, the rest 2×1, unfeatured collapse into one "Also" tile. Change the number, the layout changes. |
+| Different information types | Hero row: identity · now · headline number · latest post · local time. Deletion test passes. |
+| Three spacing values | 14px gutter · 24px tile padding · 24px+ page margin. |
+| One idea per tile | Every tile has a mono label and one job. |
+| The figure is data | The lead tile's chart is drawn from the project's own frontmatter; the headline number on the hero is derived from the same series, so the two can never disagree. |
+
+The case-study and post pages stay editorial: reading is the one job tiles
+are wrong for.
+
 ## Sources
+
+Second pass (layout):
+
+- [uxskill — why every AI UI reaches for the bento grid](https://uxskill.laithjunaidy.com/blog/ai-bento-grid-overused.html) — the deletion test
+- [Brainy Papers — bento grid design guide 2026](https://brainy.ink/paper/bento-grid-design-guide) — sizing ratios, spacing, mobile collapse
+- [Ask HN: Share your personal website (2026)](https://news.ycombinator.com/item?id=46618714)
+- [paco.me](https://paco.me/) · [leerob.com](https://leerob.com/) · [brittanychiang.com](https://brittanychiang.com/) — read directly for structure
+- [Mockuuups — bento grid examples](https://mockuuups.studio/blog/post/best-bento-grid-design-examples/)
+
+First pass (content):
 
 - [sitebuilderreport — engineer portfolios](https://www.sitebuilderreport.com/inspiration/engineer-portfolios)
 - [sitebuilderreport — software engineer portfolios](https://www.sitebuilderreport.com/inspiration/software-engineer-portfolios)

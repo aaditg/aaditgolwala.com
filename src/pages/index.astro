@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
-import ProjectCard from "../components/ProjectCard.astro";
+import Tile from "../components/Tile.astro";
+import ProjectTile from "../components/ProjectTile.astro";
+import ClockTile from "../components/ClockTile.astro";
 import { site, experience, links } from "../site";
 
 const visible = ({ data }: { data: { draft: boolean } }) => import.meta.env.DEV || !data.draft;
@@ -11,13 +13,17 @@ const projects = (await getCollection("projects", visible)).sort(
 );
 const featured = projects.filter((p) => p.data.featured);
 const rest = projects.filter((p) => !p.data.featured);
+const [lead, second, ...others] = featured;
 
 const posts = (await getCollection("writing", visible)).sort(
   (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
 );
+const latest = posts[0];
 
-// timeZone: frontmatter dates parse as UTC midnight; without this a reader
-// west of Greenwich sees the day before.
+// The headline number comes from the lead project's own data, so the tile
+// can never drift from the case study.
+const headline = lead?.data.chart?.series.find((s) => s.highlight);
+
 const dateFormat = new Intl.DateTimeFormat("en-US", {
   month: "short",
   year: "numeric",
@@ -25,100 +31,112 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
 });
 ---
 
-<Base>
-  {/* Above the fold: who, what, where to reach you. Visitors decide inside
-      thirty seconds, so nothing here is below a scroll. */}
-  <section class="pt-16 pb-14 sm:pt-24">
-    <h1 class="text-display font-semibold">{site.name}</h1>
-    <p class="mt-3 text-lg text-muted">{site.tagline}</p>
+<Base wide>
+  {/* One continuous 6-column mosaic. DOM order is priority order, which is
+      also the phone order. `dense` lets small tiles backfill gaps left when
+      a draft project is excluded from a production build. */}
+  <div class="grid grid-cols-1 gap-gutter py-10 sm:grid-cols-2 lg:grid-cols-6 lg:[grid-auto-flow:dense]">
 
-    <p class="mt-5 flex items-start gap-2 font-mono text-xs text-faint">
-      {/* items-start + the nudge keeps the dot on the first line when this
-          wraps on a phone, instead of floating to the middle of the block. */}
-      <span class="relative mt-[0.45em] flex size-1.5 shrink-0" aria-hidden="true">
-        <span class="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60"></span>
-        <span class="relative inline-flex size-1.5 rounded-full bg-accent"></span>
-      </span>
-      {site.currently}
-    </p>
+    {/* ---- Anchor: the one tile that is allowed to be big ---------------- */}
+    <Tile cols={3} rows={2} class="justify-between">
+      <div>
+        <h1 class="text-display font-semibold">{site.name}</h1>
+        <p class="mt-2 text-lg text-muted">{site.tagline}</p>
+        <p class="mt-4 flex items-start gap-2 font-mono text-xs text-faint">
+          <span class="relative mt-[0.45em] flex size-1.5 shrink-0" aria-hidden="true">
+            <span class="absolute inline-flex size-full animate-ping rounded-full bg-accent opacity-60"></span>
+            <span class="relative inline-flex size-1.5 rounded-full bg-accent"></span>
+          </span>
+          {site.currently}
+        </p>
+        <p class="mt-6 max-w-prose text-muted">{site.intro}</p>
+      </div>
+      <div class="mt-8 flex flex-wrap gap-x-5 gap-y-2 text-sm">
+        <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
+        {site.resume && <a href={site.resume} class="text-accent hover:underline">Résumé (PDF)</a>}
+      </div>
+    </Tile>
 
-    <p class="mt-7 max-w-prose text-muted">{site.intro}</p>
-
-    <div class="mt-7 flex flex-wrap gap-x-5 gap-y-2 text-sm">
-      <a href={`mailto:${site.email}`} class="text-accent hover:underline">{site.email}</a>
-      <a href={links.github} class="text-accent hover:underline">GitHub ↗</a>
-      <a href={links.linkedin} class="text-accent hover:underline">LinkedIn ↗</a>
-      {site.resume && <a href={site.resume} class="text-accent hover:underline">Résumé (PDF)</a>}
-    </div>
-  </section>
-
-  <section id="work" class="scroll-mt-20 py-10">
-    <h2 class="label">Work</h2>
-    <ol class="mt-5">
-      {experience.map((job) => (
-        <li class="border-t border-line py-5">
-          <div class="flex flex-wrap items-baseline gap-x-3">
+    <Tile cols={2} label="Now">
+      <ul class="space-y-3 text-sm">
+        {experience.slice(0, 2).map((job) => (
+          <li>
             <p class="font-medium tracking-tight">{job.company}</p>
-            <span class="label ml-auto">{job.period}</span>
-          </div>
-          <p class="mt-0.5 text-sm text-faint">{job.role}</p>
-          <p class="mt-2 text-sm text-muted">{job.note}</p>
-        </li>
-      ))}
-    </ol>
-  </section>
-
-  <section id="projects" class="scroll-mt-20 py-10">
-    <h2 class="label">Selected projects</h2>
-    <div class="mt-5">
-      {featured.map((project) => <ProjectCard project={project} />)}
-    </div>
-
-    {rest.length > 0 && (
-      <>
-        <h2 class="label mt-14">Also</h2>
-        <ul class="mt-4">
-          {rest.map((project) => (
-            <li class="border-t border-line py-3.5">
-              <a href={`/projects/${project.id}`} class="group flex flex-wrap items-baseline gap-x-2 text-sm">
-                <span class="font-medium transition-colors group-hover:text-accent">{project.data.title}</span>
-                <span class="text-muted">{project.data.blurb}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </>
-    )}
-  </section>
-
-  {posts.length > 0 && (
-    <section id="writing" class="scroll-mt-20 py-10">
-      <h2>
-        <a href="/writing" class="label transition-colors hover:text-ink">Writing →</a>
-      </h2>
-      <ul class="mt-5">
-        {posts.slice(0, 4).map((post) => (
-          <li class="border-t border-line py-5">
-            <a href={`/writing/${post.id}`} class="group block">
-              <div class="flex flex-wrap items-baseline gap-x-3">
-                <h3 class="font-medium tracking-tight transition-colors group-hover:text-accent">
-                  {post.data.title}
-                </h3>
-                <span class="label ml-auto">{dateFormat.format(post.data.date)}</span>
-              </div>
-              <p class="mt-1.5 text-sm text-muted">{post.data.description}</p>
-            </a>
+            <p class="text-muted">{job.role}</p>
           </li>
         ))}
       </ul>
+    </Tile>
 
-    </section>
-  )}
+    {lead && headline && (
+      <Tile cols={1} label="Best result" href={`/projects/${lead.id}`}>
+        <p class="mt-auto font-mono text-3xl font-medium tabular-nums tracking-tight">{headline.value}</p>
+        <p class="mt-1 text-xs text-muted">macro-F1 · {headline.label}</p>
+      </Tile>
+    )}
 
-  <section id="about" class="scroll-mt-20 py-10">
-    <h2 class="label">About</h2>
-    <div class="mt-5 max-w-prose space-y-4 text-muted">
-      {site.about.map((paragraph) => <p>{paragraph}</p>)}
-    </div>
-  </section>
+    {latest && (
+      <Tile cols={2} label="Latest writing" href={`/writing/${latest.id}`}>
+        <h2 class="font-medium tracking-tight">{latest.data.title}</h2>
+        <p class="mt-1.5 line-clamp-2 text-sm text-muted">{latest.data.description}</p>
+        <p class="label mt-auto pt-3">{dateFormat.format(latest.data.date)}</p>
+      </Tile>
+    )}
+
+    <ClockTile />
+
+    {/* ---- Projects: size follows rank ---------------------------------- */}
+    {lead && <ProjectTile project={lead} size="lead" id="projects" />}
+    {second && <ProjectTile project={second} size="large" />}
+    {others.map((p) => <ProjectTile project={p} size="normal" />)}
+
+    {/* "Also" is 4 wide so it completes the row after the last 2-wide project. */}
+    {rest.length > 0 && (
+      <Tile cols={4} label="Also">
+        <ul class="grid gap-x-6 gap-y-3 text-sm sm:grid-cols-3">
+          {rest.map((p) => (
+            <li>
+              <a href={`/projects/${p.id}`} class="font-medium hover:text-accent">{p.data.title}</a>
+              <p class="mt-0.5 text-xs text-muted">{p.data.blurb}</p>
+            </li>
+          ))}
+        </ul>
+      </Tile>
+    )}
+
+    {/* ---- Work, links, about ------------------------------------------- */}
+    <Tile cols={3} rows={2} id="work" label="Work">
+      <ol class="divide-y divide-line">
+        {experience.map((job) => (
+          <li class="py-3 first:pt-0 last:pb-0">
+            <div class="flex flex-wrap items-baseline gap-x-3">
+              <p class="font-medium tracking-tight">{job.company}</p>
+              <span class="label ml-auto">{job.period}</span>
+            </div>
+            <p class="text-xs text-faint">{job.role}</p>
+            <p class="mt-1 text-sm text-muted">{job.note}</p>
+          </li>
+        ))}
+      </ol>
+    </Tile>
+
+    <Tile cols={1} label="GitHub" href={links.github}>
+      <p class="mt-auto text-2xl" aria-hidden="true">↗</p>
+      <p class="mt-1 text-xs text-muted">aaditg</p>
+    </Tile>
+    <Tile cols={1} label="LinkedIn" href={links.linkedin}>
+      <p class="mt-auto text-2xl" aria-hidden="true">↗</p>
+      <p class="mt-1 text-xs text-muted">aadit-golwala</p>
+    </Tile>
+    <Tile cols={1} label="Email" href={`mailto:${site.email}`}>
+      <p class="mt-auto text-2xl" aria-hidden="true">✉</p>
+      <p class="mt-1 truncate text-xs text-muted">{site.email}</p>
+    </Tile>
+
+    <Tile cols={3} id="about" label="About">
+      <div class="space-y-3 text-sm text-muted">
+        {site.about.map((paragraph) => <p>{paragraph}</p>)}
+      </div>
+    </Tile>
+  </div>
 </Base>

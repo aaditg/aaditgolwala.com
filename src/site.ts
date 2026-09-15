@@ -19,6 +19,8 @@ export const site = {
     "I came up through FRC robotics, which is why a CNC router and a 3D printer feel about as normal to me as a terminal. That is also how a posture-corrective backpack ended up going from a spec sheet to pre-production samples.",
   ],
   location: "West Lafayette, IN",
+  // For the local-time tile. West Lafayette is Eastern.
+  timeZone: "America/Indiana/Indianapolis",
   email: "24agolwala@gmail.com",
   // Empty until the PDF is in public/. Links to it are hidden while unset,
   // so CI does not fail on a link to a file that is not there yet.
@@ -34,7 +36,7 @@ export const links = {
 export const nav = [
   { href: "/#work", label: "Work" },
   { href: "/#projects", label: "Projects" },
-  { href: "/#writing", label: "Writing" },
+  { href: "/writing", label: "Writing" },
   { href: "/#about", label: "About" },
 ] as const;
 

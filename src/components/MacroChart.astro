@@ -1,0 +1,67 @@
+---
+// Single-series horizontal bar chart for a project tile. One hue for the
+// field, the accent for the highlighted row; every piece of text wears a text
+// token, never the bar colour. The full table lives on the case-study page.
+interface Series { label: string; value: number; highlight: boolean }
+interface Props {
+  title: string;
+  unit?: string;
+  max: number;
+  series: Series[];
+  class?: string;
+}
+
+const { title, unit = "", max, series, class: extra = "" } = Astro.props;
+
+const W = 320;
+const ROW = 24;      // row pitch
+const BAR = 10;      // bar thickness — thin marks
+const R = 4;         // rounded data-end
+const LABEL_W = 104; // left column for category labels
+const VALUE_W = 40;  // right column for values
+const X0 = LABEL_W + 8;
+const PLOT_W = W - X0 - VALUE_W;
+const H = series.length * ROW;
+
+// Rounded on the data end only; square against the baseline.
+const bar = (w: number, y: number) =>
+  w <= R
+    ? `M${X0},${y} h${w} v${BAR} h-${w} z`
+    : `M${X0},${y} h${w - R} a${R},${R} 0 0 1 ${R},${R} v${BAR - 2 * R} a${R},${R} 0 0 1 -${R},${R} h-${w - R} z`;
+
+const summary = series.map((s) => `${s.label} ${s.value}${unit}`).join(", ");
+---
+
+<figure class:list={["min-w-0", extra]}>
+  <figcaption class="label mb-2">{title}</figcaption>
+  <svg
+    viewBox={`0 0 ${W} ${H}`}
+    width="100%"
+    role="img"
+    aria-label={`${title}: ${summary}`}
+    class="block overflow-visible"
+    font-family="var(--font-mono)"
+    font-size="10"
+  >
+    {series.map((s, i) => {
+      const y = i * ROW + (ROW - BAR) / 2;
+      const w = Math.max(0, Math.min(1, s.value / max)) * PLOT_W;
+      return (
+        <g>
+          <title>{`${s.label}: ${s.value}${unit}`}</title>
+          <text x={LABEL_W} y={y + BAR - 1} text-anchor="end" fill="var(--color-muted)">{s.label}</text>
+          {/* 2px surface gap between adjacent bars comes from ROW − BAR. */}
+          <path d={bar(w, y)} fill={s.highlight ? "var(--color-accent)" : "var(--color-bar)"} />
+          <text
+            x={X0 + w + 6}
+            y={y + BAR - 1}
+            fill={s.highlight ? "var(--color-ink)" : "var(--color-muted)"}
+            font-weight={s.highlight ? "600" : "400"}
+          >
+            {s.value}{unit}
+          </text>
+        </g>
+      );
+    })}
+  </svg>
+</figure>

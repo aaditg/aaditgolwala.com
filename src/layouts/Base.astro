@@ -6,9 +6,12 @@ import { site, nav, links } from "../site";
 interface Props {
   title?: string;
   description?: string;
+  // The mosaic needs ~1150px; reading pages keep the 42rem column.
+  wide?: boolean;
 }
 
-const { title, description = site.intro } = Astro.props;
+const { title, description = site.intro, wide = false } = Astro.props;
+const container = wide ? "max-w-6xl" : "max-w-2xl";
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
 // Regenerate with `node scripts/og.mjs` when the name or tagline changes.
@@ -73,7 +76,7 @@ const person = {
     </a>
 
     <header class="sticky top-0 z-40 border-b border-line/70 bg-paper/85 backdrop-blur-sm">
-      <div class="mx-auto flex h-14 max-w-2xl items-center justify-between gap-6 px-6">
+      <div class:list={["mx-auto flex h-14 items-center justify-between gap-6 px-6", container]}>
         <a href="/" class="font-medium tracking-tight hover:text-accent">{site.name}</a>
         <div class="flex items-center gap-5">
           {/* Hidden on phones: the full name plus four items does not fit at
@@ -90,11 +93,11 @@ const person = {
       </div>
     </header>
 
-    <main id="main" class="mx-auto max-w-2xl px-6">
+    <main id="main" class:list={["mx-auto px-6", container]}>
       <slot />
     </main>
 
-    <footer class="mx-auto mt-28 max-w-2xl border-t border-line px-6 py-10">
+    <footer class:list={["mx-auto mt-28 border-t border-line px-6 py-10", container]}>
       <div class="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm">
         <a href={`mailto:${site.email}`} class="text-muted transition-colors hover:text-ink">Email</a>
         <a href={links.github} class="text-muted transition-colors hover:text-ink">GitHub</a>

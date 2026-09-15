@@ -24,6 +24,23 @@ const projects = defineCollection({
     hardPart: z.string().optional(),
     // Numbers only: latency, throughput, users, cost, accuracy.
     metrics: z.array(z.string()).default([]),
+    // Optional small figure for the homepage tile. One series, one number
+    // per row; the highlighted row is drawn in the accent. Keeps the tile
+    // honest — a real result, not a stock screenshot.
+    chart: z
+      .object({
+        title: z.string(),
+        unit: z.string().optional(),
+        max: z.number().default(1),
+        series: z.array(
+          z.object({
+            label: z.string(),
+            value: z.number(),
+            highlight: z.boolean().default(false),
+          }),
+        ),
+      })
+      .optional(),
     draft: z.boolean().default(true),
   }),
 });
