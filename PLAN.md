@@ -146,6 +146,21 @@ homepage shows the four most recent and the section heading links through.
 
 ---
 
+## 7. Tried and reverted: tile mosaic (15 September 2026)
+
+A second research pass on layout found the canonical engineer sites (Paco
+Coursey, Lee Robinson, Brittany Chiang) are all single-column and typographic,
+and HN's "share your site" thread lists generic bento as a criticism. A full
+mosaic was built anyway — one anchor, sizes driven by `order`, a real chart in
+the lead tile — and reverted the same day. The editorial column stays. If the
+site needs more visual weight, push *this* design harder (display serif, a
+figure per project card, a stronger accent) rather than re-tiling it.
+The mosaic is in git history (`git log --grep=mosaic`) if any piece is wanted.
+
+- [uxskill — the bento deletion test](https://uxskill.laithjunaidy.com/blog/ai-bento-grid-overused.html)
+- [Brainy Papers — bento sizing and spacing rules](https://brainy.ink/paper/bento-grid-design-guide)
+- [Ask HN: Share your personal website (2026)](https://news.ycombinator.com/item?id=46618714)
+
 ## Sources
 
 - [sitebuilderreport — engineer portfolios](https://www.sitebuilderreport.com/inspiration/engineer-portfolios)
