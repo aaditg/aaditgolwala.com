@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, blurb, period, stack, status, description, highlights, hardPart, metrics, links, repo, demo, caseStudy } =
+const { title, blurb, role, period, stack, status, description, highlights, hardPart, metrics, links, repo, demo, caseStudy } =
   project.data;
 
 // Where to see it, in a fixed order: named links first, then the generic ones.
@@ -25,6 +25,8 @@ const seeIt = [
     <span class="label ml-auto">{period}</span>
   </div>
 
+  {/* Who did what. Founder vs co-founder vs solo is a fact people look for. */}
+  <p class="mt-1.5 text-sm text-faint">{role}</p>
   <p class="mt-3 text-lg text-muted">{blurb}</p>
 
   {(seeIt.length > 0 || caseStudy) && (
