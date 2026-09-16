@@ -1,7 +1,7 @@
 ---
 title: "ALIGNA"
 blurb: 'A 16" laptop backpack built around the spine instead of behind it — from spec sheet to pre-production samples.'
-role: "Co-founder — product design and the prelaunch site"
+role: "Founder — product design, engineering, and the prelaunch site"
 period: "2026"
 stack: ["Fusion 360", "Astro", "Cloudflare Workers"]
 status: "active"

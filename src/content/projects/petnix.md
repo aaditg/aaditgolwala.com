@@ -1,7 +1,7 @@
 ---
 title: "Petnix"
 blurb: "An iOS app for a pet's weight, feeding, and care. On TestFlight; App Store next."
-role: "Solo — product, iOS app, backend, and site"
+role: "Co-founder — iOS app, backend, and site"
 period: "2025 — present"
 stack: ["React Native", "Expo", "TypeScript", "Supabase", "Postgres", "Maestro", "Astro", "Cloudflare"]
 status: "beta"
@@ -9,6 +9,8 @@ group: "product"
 featured: true
 order: 1
 links:
+  # petpal.app is a for-sale parking page as of 15 Sep 2026 — do not link it
+  # unless the domain is actually bought and pointed at the site.
   - { label: "petnix.app", href: "https://petnix.app" }
 description:
   - >-
