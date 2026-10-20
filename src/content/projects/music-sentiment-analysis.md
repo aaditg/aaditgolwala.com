@@ -1,6 +1,6 @@
 ---
 title: "Multimodal music emotion recognition"
-blurb: "Reading the mood of a song from its score, its lyrics, and its audio — then measuring which of the three actually knows."
+blurb: "Thirty-two experiments on whether a song's notes, recording, or lyrics predict its mood — and why the top score only tells part of the story."
 role: "Solo"
 period: "2026"
 stack: ["Python", "scikit-learn", "PyTorch", "DistilBERT", "OpenAI API"]
@@ -12,29 +12,33 @@ description:
   - >-
     Can you tell how a song feels from its notes, its lyrics, or its recording,
     and which of the three actually knows? Every model predicts one of four
-    emotion quadrants — valence crossed with arousal — so results stay
-    comparable across inputs that share nothing else.
+    emotion groups — valence crossed with arousal — so results stay comparable
+    across inputs that share nothing else.
   - >-
-    Five approaches on one problem: symbolic features from MIDI, TF-IDF lyrics
-    into an SVM, acoustic features from audio, weighted late fusion where both
-    exist, and DistilBERT fine-tuning against GPT-5.5 zero-shot. Nested
-    cross-validation throughout, and the negative results reported next to
-    the wins.
+    Thirty-two experiments on three datasets: symbolic features from MIDI,
+    TF-IDF lyrics into an SVM, acoustic features from audio, early and
+    weighted late fusion where both exist, and DistilBERT fine-tuning against
+    two LLMs. Cross-validation and the official test split are reported
+    separately, because they answer different questions.
 highlights:
   - >-
-    Audio hears energy but not mood. Fixed the collapse on the two
-    disagreement quadrants with separate valence and arousal regressors plus
-    SMOTE.
+    Combining audio and lyrics on matched samples helped every emotion group:
+    0.677 lyrics alone, 0.625 audio alone, 0.743 fused. Q1 gained the most,
+    Q4 the least and stayed the hardest.
   - >-
-    Fusion beats either modality alone: 0.68 lyrics, 0.63 audio, 0.743
-    together.
+    The LLM's 0.764 and fusion's 0.743 are not compared head to head. One is
+    a held-out lyrics split, the other cross-validation on paired data; a
+    shared test set would be needed first.
   - >-
-    Found and fixed a hardcoded-tempo bug that silently miscomputed every
-    duration feature — and it moved accuracy by almost nothing.
+    Few-shot prompting lowered both LLMs' scores. That says the tested setups
+    did worse, not that examples hurt in general.
 caseStudy: true
 repo: "https://github.com/aaditg/MusicSentimentAnalysis"
-hardPart: "Audio hears energy but not mood, so the two quadrants where valence and arousal disagree collapsed to near-zero F1. Predicting valence and arousal as separate regressions and reading the quadrant off them — plus SMOTE on the minority classes — took macro-F1 from 0.40 to 0.49 and stopped the model ignoring the hard classes entirely."
-metrics: ["0.764 macro-F1 · GPT-5.5 zero-shot", "0.743 · audio + lyrics fusion", "5 approaches compared"]
+# TODO: Medium URL for the writeup, as a pill next to Code:
+# links:
+#   - { label: "Medium", href: "https://medium.com/@.../..." }
+hardPart: "An audio model that was 64% accurate scored 0.025 F1 on tense music and 0.089 on calm music — the accuracy number hid it. Rebalancing with SMOTE took macro-F1 from 0.395 to 0.494 and cost three points of accuracy, a trade worth making when all four moods matter."
+metrics: ["32 experiments", "0.743 macro-F1 · audio + lyrics, cross-validated", "0.764 · GPT-5.5 zero-shot, held-out lyrics"]
 draft: false
 ---
 
@@ -81,20 +85,30 @@ reliably hear valence from acoustic features alone.
 
 ## Results
 
-| Approach | Macro-F1 |
+Two tables, because they are two evaluation setups and should not be ranked
+together.
+
+Cross-validated, each on its own dataset:
+
+| Approach | Dataset | Macro-F1 |
+| --- | --- | --- |
+| Audio, random forest + SMOTE | DEAM, 1,802 | 0.494 |
+| Symbolic, balanced logistic regression | EMOPIA, 1,071 clips | 0.639 |
+| Lyrics, LinearSVC tuned | MERGE Lyrics, 2,568 | 0.690 |
+| Audio + lyrics, weighted late fusion | MERGE Bimodal, 2,216 | 0.743 |
+
+Lyrics only, on MERGE's official 384-sample test split:
+
+| Model | Macro-F1 |
 | --- | --- |
-| Audio (best: RandomForest + SMOTE) | 0.494 |
-| Symbolic (LogReg, balanced) | 0.639 |
-| Lyrics (LinearSVC, tuned) | 0.690 |
-| DistilBERT fine-tuned | 0.716 |
-| Audio + lyrics, weighted late fusion | 0.743 |
+| LinearSVC reference | 0.665 |
+| DistilBERT, fine-tuned | 0.716 |
 | GPT-5.5, zero-shot | 0.764 |
 
-Two results worth pulling out. Fusion beats either half — lyrics alone 0.68,
-audio alone 0.63, together 0.743 — so the modalities really are complementary.
-And on a fair held-out lyrics split the ranking reads as a history of the field
-in one line: TF-IDF SVM 0.665 → fine-tuned DistilBERT 0.716 → GPT-5.5 zero-shot
-0.764, the last with no training at all.
+Fusion beat either half on the same songs, and the gain showed up in all
+four groups. On the lyrics split the ranking reads as a history of the
+field — TF-IDF SVM, fine-tuned transformer, prompted model — but 0.764 is
+not "better than" 0.743; they were never measured on the same test set.
 
 ## What did not work
 
@@ -115,4 +129,4 @@ four hand-picked examples just add noise.
 Across every approach, classical or neural or prompted, Q4 — calm and content —
 is the hardest quadrant. It is the quietest emotion and the easiest to confuse.
 
-**Full writeup:** [Reading the mood of a song from three angles](/writing/reading-the-mood-of-a-song)
+**Full writeup:** [I tried to predict a song's mood from its notes, audio, and lyrics](/writing/predict-a-songs-mood)

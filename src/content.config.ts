@@ -45,6 +45,9 @@ const writing = defineCollection({
     title: z.string(),
     description: z.string(),
     date: z.coerce.date(),
+    // Where the post was first published, when that is somewhere else. Becomes
+    // the page's canonical URL and a visible "originally published" link.
+    canonical: z.url().optional(),
     draft: z.boolean().default(true),
   }),
 });

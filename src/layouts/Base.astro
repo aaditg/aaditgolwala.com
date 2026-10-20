@@ -6,11 +6,13 @@ import { site, nav, links } from "../site";
 interface Props {
   title?: string;
   description?: string;
+  // Override when the page is a copy of something published elsewhere first.
+  canonical?: string;
 }
 
-const { title, description = site.intro } = Astro.props;
+const { title, description = site.intro, canonical: canonicalOverride } = Astro.props;
 const pageTitle = title ? `${title} — ${site.name}` : `${site.name} — ${site.tagline}`;
-const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url);
+const canonical = canonicalOverride ?? new URL(Astro.url.pathname, Astro.site ?? site.url);
 // Regenerate with `node scripts/og.mjs` when the name or tagline changes.
 const ogImage = new URL("/og.png", Astro.site ?? site.url);
 const updated = new Date();
