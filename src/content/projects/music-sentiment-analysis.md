@@ -34,9 +34,8 @@ highlights:
     did worse, not that examples hurt in general.
 caseStudy: true
 repo: "https://github.com/aaditg/MusicSentimentAnalysis"
-# TODO: Medium URL for the writeup, as a pill next to Code:
-# links:
-#   - { label: "Medium", href: "https://medium.com/@.../..." }
+links:
+  - { label: "Read on Medium", href: "https://medium.com/@24agolwala/i-tried-to-predict-a-songs-mood-from-its-notes-audio-and-lyrics-285bcadd3414?source=friends_link&sk=e4b5b90954efdb29d85f013ad7b7546f" }
 hardPart: "An audio model that was 64% accurate scored 0.025 F1 on tense music and 0.089 on calm music — the accuracy number hid it. Rebalancing with SMOTE took macro-F1 from 0.395 to 0.494 and cost three points of accuracy, a trade worth making when all four moods matter."
 metrics: ["32 experiments", "0.743 macro-F1 · audio + lyrics, cross-validated", "0.764 · GPT-5.5 zero-shot, held-out lyrics"]
 draft: false

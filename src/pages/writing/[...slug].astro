@@ -10,7 +10,7 @@ export const getStaticPaths = (async () => {
 
 const { post } = Astro.props;
 const { Content } = await render(post);
-const { title, description, date, canonical } = post.data;
+const { title, description, date, canonical, readLink } = post.data;
 const originalHost = canonical ? new URL(canonical).hostname.replace(/^www\./, "") : null;
 
 const dateFormat = new Intl.DateTimeFormat("en-US", {
@@ -32,7 +32,7 @@ const dateFormat = new Intl.DateTimeFormat("en-US", {
       {canonical && (
         <>
           {" · "}
-          <a href={canonical} class="transition-colors hover:text-ink">Originally published on {originalHost} ↗</a>
+          <a href={readLink ?? canonical} class="transition-colors hover:text-ink">Originally published on {originalHost} ↗</a>
         </>
       )}
     </p>

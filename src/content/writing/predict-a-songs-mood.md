@@ -1,9 +1,11 @@
 ---
 title: "I Tried to Predict a Song's Mood From Its Notes, Audio, and Lyrics"
 description: "What 32 experiments showed about music emotion recognition, and why the overall score only tells part of the story."
-# TODO: set to the Medium publish date, and uncomment canonical with the post's URL.
 date: 2026-10-20
-# canonical: https://medium.com/@.../...
+canonical: https://medium.com/@24agolwala/i-tried-to-predict-a-songs-mood-from-its-notes-audio-and-lyrics-285bcadd3414
+# Friend link: lets readers through Medium's paywall while the story is metered.
+# Once the story is un-metered this can be removed and canonical is enough.
+readLink: https://medium.com/@24agolwala/i-tried-to-predict-a-songs-mood-from-its-notes-audio-and-lyrics-285bcadd3414?source=friends_link&sk=e4b5b90954efdb29d85f013ad7b7546f
 draft: false
 ---
 

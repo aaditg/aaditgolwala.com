@@ -48,6 +48,9 @@ const writing = defineCollection({
     // Where the post was first published, when that is somewhere else. Becomes
     // the page's canonical URL and a visible "originally published" link.
     canonical: z.url().optional(),
+    // What readers click, when it should differ from the canonical — e.g. a
+    // Medium friend link that bypasses the paywall. Canonical stays clean.
+    readLink: z.url().optional(),
     draft: z.boolean().default(true),
   }),
 });
