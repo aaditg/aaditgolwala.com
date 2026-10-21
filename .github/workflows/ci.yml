@@ -43,6 +43,9 @@ jobs:
           # --root-dir resolves "/..." hrefs against the build output.
           # The canonical host is excluded: checking your own site here would
           # be circular, and uptime.yml already watches whether it is live.
+          # medium.com is excluded because its bot wall answers every
+          # non-browser request with 403 — the links are real, lychee just
+          # cannot see them.
           args: >-
             --no-progress
             --max-retries 2
@@ -50,6 +53,7 @@ jobs:
             --root-dir "${{ github.workspace }}/dist"
             --fallback-extensions html
             --exclude '^https://aaditgolwala\.com'
+            --exclude '^https://medium\.com'
             'dist/**/*.html'
           fail: true
 
